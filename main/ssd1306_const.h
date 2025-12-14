@@ -1,101 +1,54 @@
 #pragma once
 
+// clang-format off
+
 /* https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf */
 
 /*  CONTROL BYTE
-    A control byte mainly consists of Co (Continuation Bit) and D/C# (Data /
-   Command Selection Bit) bits following by six “0”. Co:     0 = The
-   transmission of the following information will contain data bytes only. 1 =
-   NOT DEFINED D/C#:   0 = The following data byte is a command. 1 = The
-   following data byte is a data which will be stored at the GDDRAM. The GDDRAM
-   column address pointer will be increased by one automatically after each data
-   write.
+    A control byte mainly consists of Co (Continuation Bit) and D/C# (Data / Command Selection Bit) bits following by six “0”.
+        Co:     0 = The transmission of the following information will contain data bytes only.
+                1 = NOT DEFINED
+        D/C#:   0 = The following data byte is a command.
+                1 = The following data byte is a data which will be stored at the GDDRAM. The GDDRAM column address pointer will be
+                    increased by one automatically after each data write.
 */
 #define OLED_CONTROL_BYTE_CMD 0x00  //  Control Byte to transmit a command.
 #define OLED_CONTROL_BYTE_DATA 0x40 //  Control byte to transmit data.
 
 /*  FUNDAMENTAL COMMAND */
-#define OLED_CMD_SET_CONTRAST_CONTROL                                          \
-  0x81 //   Double byte command to set contrast setting of the display. [0x00 -
-       //   0xFF] (RESET: 0x7F)
-#define OLED_CMD_ENABLE_DISPLAY_RAM                                            \
-  0xA4 //   Enable display outputs according to the GDDRAM contents. (Default
-       //   during reset)
-#define OLED_CMD_FORCE_DISPLAY_ALLON                                           \
-  0xA5 //   Forces the entire display to be “ON”.
-#define OLED_CMD_NORMAL_DISPLAY                                                \
-  0xA6 //   RAM data of 1 indicates an “ON” pixel. (Default during reset)
-#define OLED_CMD_INVERTED_DISPLAY                                              \
-  0xA7 //   RAM data of 0 indicates an “ON” pixel.
-#define OLED_CMD_DISPLAY_OFF                                                   \
-  0xAE //   Display OFF in sleep mode. (Default during reset)
-#define OLED_CMD_DISPLAY_ON 0xAF //   Display ON in normal mode.
+#define OLED_CMD_SET_CONTRAST_CONTROL 0x81 //   Double byte command to set contrast setting of the display. [0x00 - 0xFF] (RESET: 0x7F)
+#define OLED_CMD_ENABLE_DISPLAY_RAM 0xA4   //   Enable display outputs according to the GDDRAM contents. (Default during reset)
+#define OLED_CMD_FORCE_DISPLAY_ALLON 0xA5  //   Forces the entire display to be “ON”.
+#define OLED_CMD_NORMAL_DISPLAY 0xA6       //   RAM data of 1 indicates an “ON” pixel. (Default during reset)
+#define OLED_CMD_INVERTED_DISPLAY 0xA7     //   RAM data of 0 indicates an “ON” pixel.
+#define OLED_CMD_DISPLAY_OFF 0xAE          //   Display OFF in sleep mode. (Default during reset)
+#define OLED_CMD_DISPLAY_ON 0xAF           //   Display ON in normal mode.
 
 /*  ADDRESSING SETTING */
-#define OLED_CMD_SET_MEMORY_ADDR_MODE                                          \
-  0x20 //  Double byte command to set memory addressing mode. [0x00 | HORZ, 0x01
-       //  | VERT, 0x02 | PAGE] (RESET: 0x02)
-#define OLED_MASK_PAGE_ADDR                                                    \
-  0xB0 //  Mask to set the page address of pointer only in page addressing mode.
-       //  [0xB0 - 0xB7]
-#define OLED_MASK_LSB_NIBBLE_SEG_ADDR                                          \
-  0x00 //  Mask to set the lower start column address of pointer only in page
-       //  addressing mode. [0x00 - 0x0F]
-#define OLED_MASK_HSB_NIBBLE_SEG_ADDR                                          \
-  0x10 //  Mask to set the higher start column address of pointer only in page
-       //  addressing mode. [0x10 - 0x1F]
-#define OLED_CMD_SET_COLUMN_ADDR_RANGE                                         \
-  0x21 //  Three byte command to set start and end column address only in
-       //  horizontal/vertical mode. [0x00 - 0x7F & 0x00 - 0x7F] (RESET: 0x00 &
-       //  0x7F)
-#define OLED_CMD_SET_PAGE_ADDR_RANGE                                           \
-  0x22 //  Three byte command to set start and end page address only in
-       //  horizontal/vertical mode. [0x00 - 0x07 & 0x00 - 0x07] (RESET: 0x00 &
-       //  0x07)
+#define OLED_CMD_SET_MEMORY_ADDR_MODE 0x20  //  Double byte command to set memory addressing mode. [0x00 | HORZ, 0x01 | VERT, 0x02 | PAGE] (RESET: 0x02)
+#define OLED_MASK_PAGE_ADDR 0xB0            //  Mask to set the page address of pointer only in page addressing mode. [0xB0 - 0xB7]
+#define OLED_MASK_LSB_NIBBLE_SEG_ADDR 0x00  //  Mask to set the lower start column address of pointer only in page addressing mode. [0x00 - 0x0F]
+#define OLED_MASK_HSB_NIBBLE_SEG_ADDR 0x10  //  Mask to set the higher start column address of pointer only in page addressing mode. [0x10 - 0x1F]
+#define OLED_CMD_SET_COLUMN_ADDR_RANGE 0x21 //  Three byte command to set start and end column address only in horizontal/vertical mode. [0x00 - 0x7F & 0x00 - 0x7F] (RESET: 0x00 & 0x7F)
+#define OLED_CMD_SET_PAGE_ADDR_RANGE 0x22   //  Three byte command to set start and end page address only in horizontal/vertical mode. [0x00 - 0x07 & 0x00 - 0x07] (RESET: 0x00 & 0x07)
 
 /*  HARDWARE CONFIGURATION */
-#define OLED_MASK_DISPLAY_START_LINE                                           \
-  0x40 //    Mask to set the display start line register to determine starting
-       //    address of display RAM. [0x40 - 0x7F] (RESET: 0x40)
-#define OLED_CMD_SEGMENT_REMAP_LEFT_TO_RIGHT                                   \
-  0xA0 //    Column address 0 is mapped to SEG0, indicating that the display is
-       //    mapped from left to right. (Default during reset)
-#define OLED_CMD_SEGMENT_REMAP_RIGHT_TO_LEFT                                   \
-  0xA1 //    Column address 127 is mapped to SEG0, indicating that the display
-       //    is mapped from right to left.
-#define OLED_CMD_SET_MUX_RATIO                                                 \
-  0xA8 //    Double byte command to set MUX ratio. [0x0F - 0x3F] (RESET: 0x3F =
-       //    64MUX -1)
-#define OLED_CMD_COM_SCAN_DIRECTION_NORMAL                                     \
-  0xC0 //    Normal COM scan direction. (COM0 -> COM[MUX-1] | BOTTOM TO TOP)
-#define OLED_CMD_COM_SCAN_DIRECTION_REMAP                                      \
-  0xC8 //    Remapped/Flipped COM scan direction. (COM[MUX-1] -> COM0 | TOP TO
-       //    BOTTOM)
-#define OLED_CMD_SET_COM_PIN_HARDWARE_MAP                                      \
-  0xDA //    Double byte command to set COM pins hardware configuration. [0x02 |
-       //    DISABLE COM REMAP - SEQUENTIAL COM, 0x12 | DISABLE COM REMAP -
-       //    ALTERNATIVE COM, 0x22 | ENABLE COM REMAP - SEQUENTIAL COM, 0x32 |
-       //    ENABLE COM REMAP - ALTERNATIVE COM] (RESET: 0x12)
-#define OLED_CMD_SET_VERT_DISPLAY_OFFSET                                       \
-  0xD3 //    Double byte command to set vertical display offset by COM. [0x00 -
-       //    0x3F] (RESET: 0x00)
+#define OLED_MASK_DISPLAY_START_LINE 0x40         //    Mask to set the display start line register to determine starting address of display RAM. [0x40 - 0x7F] (RESET: 0x40)
+#define OLED_CMD_SEGMENT_REMAP_LEFT_TO_RIGHT 0xA0 //    Column address 0 is mapped to SEG0, indicating that the display is mapped from left to right. (Default during reset)
+#define OLED_CMD_SEGMENT_REMAP_RIGHT_TO_LEFT 0xA1 //    Column address 127 is mapped to SEG0, indicating that the display is mapped from right to left.
+#define OLED_CMD_SET_MUX_RATIO 0xA8               //    Double byte command to set MUX ratio. [0x0F - 0x3F] (RESET: 0x3F = 64MUX -1)
+#define OLED_CMD_COM_SCAN_DIRECTION_NORMAL 0xC0   //    Normal COM scan direction. (COM0 -> COM[MUX-1] | BOTTOM TO TOP)
+#define OLED_CMD_COM_SCAN_DIRECTION_REMAP 0xC8    //    Remapped/Flipped COM scan direction. (COM[MUX-1] -> COM0 | TOP TO BOTTOM)
+#define OLED_CMD_SET_COM_PIN_HARDWARE_MAP 0xDA    //    Double byte command to set COM pins hardware configuration. [0x02 | DISABLE COM REMAP - SEQUENTIAL COM, 0x12 | DISABLE COM REMAP - ALTERNATIVE COM, 0x22 | ENABLE COM REMAP - SEQUENTIAL COM, 0x32 | ENABLE COM REMAP - ALTERNATIVE COM] (RESET: 0x12)
+#define OLED_CMD_SET_VERT_DISPLAY_OFFSET 0xD3     //    Double byte command to set vertical display offset by COM. [0x00 - 0x3F] (RESET: 0x00)
 
 /*  TIMING & DRIVING SCHEME SETTING */
-#define OLED_CMD_SET_DISPLAY_CLK_DIVIDE                                        \
-  0xD5 //   Double byte command to set display clock oscillator frequency and
-       //   divide ratio. [0x00 - 0x0F << 4 & 0x00->0x0F] ((OSCFREQ) << 4 |
-       //   (DIVIDE RATIO)) (RESET: 0x80)
-#define OLED_CMD_SET_PRECHARGE_PERIOD                                          \
-  0xD9 //   Double byte command to set pre-charge period. [0x00 - 0x0F << 4 &
-       //   0x00 - 0x0F](PHASE2/DOTS << 4 | PHASE1/DOTS) (RESET: 0x22)
-#define OLED_CMD_SET_VCOMH_DESELECT_LEVEL                                      \
-  0xDB //   Double byte command to set VCOMH deselect level regulator output.
-       //   [0X00 | 0.65, 0X20 | 0.77, 0X30 | 0.83 VCC] (RESET: 0x20)
+#define OLED_CMD_SET_DISPLAY_CLK_DIVIDE 0xD5   //   Double byte command to set display clock oscillator frequency and divide ratio. [0x00 - 0x0F << 4 & 0x00->0x0F] ((OSCFREQ) << 4 | (DIVIDE RATIO)) (RESET: 0x80)
+#define OLED_CMD_SET_PRECHARGE_PERIOD 0xD9     //   Double byte command to set pre-charge period. [0x00 - 0x0F << 4 & 0x00 - 0x0F](PHASE2/DOTS << 4 | PHASE1/DOTS) (RESET: 0x22)
+#define OLED_CMD_SET_VCOMH_DESELECT_LEVEL 0xDB //   Double byte command to set VCOMH deselect level regulator output. [0X00 | 0.65, 0X20 | 0.77, 0X30 | 0.83 VCC] (RESET: 0x20)
 
 /*  CHARGE PUMP */
-#define OLED_CMD_SET_CHARGE_PUMP                                               \
-  0x8D // Double byte command to set charge pump. [0x10 | OFF, 0x14 | ON]
-       // (RESET: 0x14)
+#define OLED_CMD_SET_CHARGE_PUMP 0x8D // Double byte command to set charge pump. [0x10 | OFF, 0x14 | ON] (RESET: 0x14)
 
 /*  ADDITIONAL COMMANDS */
 #define OLED_CMD_NO_OPERATION 0xE3 // NO OPERATION COMMAND
@@ -362,3 +315,5 @@ static const uint8_t font8x8[256][8] = {
     {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, // 254 -> 0xFE (■)
     {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}  // 255 -> 0xFF ( )
 };
+
+// clang-format on
